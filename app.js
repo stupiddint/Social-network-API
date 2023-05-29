@@ -1,12 +1,20 @@
 import express from "express";
+import bodyParser from "body-parser";
 import connect from "./database/mongodbConnection.js";
+import router from "./routes/userRoute.js";
+
+
 
 const port = process.env.PORT || 5000;
-// middlewares
+/** middlewares */
 const app = express()
+app.use(bodyParser.json())
+// app.use(express.json())
 app.disable('x-powered-by')
 
 
+/** api routes */
+app.use('/api', router)
 
 // http get request
 app.get('/', (req, res) => {
