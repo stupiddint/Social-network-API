@@ -81,12 +81,12 @@ export async function login(req, res) {
         const user = await userModel.findOne({ $or: [{ username }, { email }] });
         // const user = await userModel.findOne({ username })
         if (!user) {
-            res.status(500).send({ message: 'user not found!' })
+            res.status(400).send({ message: 'user not found!' })
         }
         // compare the provided password with the hashed password
         const matchPassword = await bcrypt.compare(password, user.password);
         if (!matchPassword) {
-            return res.status(500).send({ message: 'password did not match.' })
+            return res.status(400).send({ message: 'password did not match.' })
         }
         return res.status(200).send({ message: 'login successful!!' })
     } catch (error) {
