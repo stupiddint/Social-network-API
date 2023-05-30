@@ -1,6 +1,7 @@
 // import userModel from "../models/userModel.js";
 import userModel from "../models/userModel.js"
 import bcrypt from 'bcrypt'
+import jwt from "jsonwebtoken";
 
 /** /api/register */
 export async function register(req, res) {
@@ -88,7 +89,14 @@ export async function login(req, res) {
         if (!matchPassword) {
             return res.status(400).send({ message: 'password did not match.' })
         }
-        return res.status(200).send({ message: 'login successful!!' })
+        // console.log(process.env.JWT_SECRET)
+        const token = jwt.sign({
+            userId: user._id,
+            username: user.username,
+            email: user.email
+        }, process.env.JWT_SECRET, { expiresIn: "24h" });
+
+        return res.status(200).send({ message: 'login successful!!', token })
     } catch (error) {
         return res.status(500).send('error while checking!!!')
     }

@@ -1,9 +1,10 @@
 import express from "express";
 import bodyParser from "body-parser";
+import dotenv from 'dotenv'
 import connect from "./database/mongodbConnection.js";
 import router from "./routes/userRoute.js";
 
-
+dotenv.config();
 
 const port = process.env.PORT || 5000;
 /** middlewares */
