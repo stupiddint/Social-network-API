@@ -8,5 +8,14 @@ const router = Router();
 
 router.route('/register').post(controller.register);
 router.route('/allusers').get(controller.getAllUsers)
+router.route('/login').post(controller.login);
 
 export default router;
+
+/**
+ * {
+  "username": "navs",
+  "email": "nvb@gamil.com",
+  "password": "8888"
+}
+ */
