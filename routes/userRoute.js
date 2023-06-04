@@ -9,6 +9,8 @@ const router = Router();
 router.route('/register').post(controller.register);
 router.route('/allusers').get(controller.getAllUsers)
 router.route('/login').post(controller.login);
+router.route('/user/:username').get(controller.getuser)
+router.route('/updateuser').put(controller.updateuser)
 
 export default router;
 

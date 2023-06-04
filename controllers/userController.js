@@ -3,6 +3,23 @@ import userModel from "../models/userModel.js"
 import bcrypt from 'bcrypt'
 import jwt from "jsonwebtoken";
 
+/** middleware for verify user */
+export async function verifyUser(req, res, next) {
+    try {
+        const { username } = req.method == "GET" ? req.query : req.body
+
+        let userexist = await userModel.findOne({ username });
+        if (!userexist) {
+            return res.status(404).send({ error: "can't find user!" })
+        }
+        next();
+
+    } catch (error) {
+        res.status(404).send({ error: 'user authentication error' })
+
+    }
+}
+
 /** /api/register */
 export async function register(req, res) {
 
@@ -101,3 +118,48 @@ export async function login(req, res) {
         return res.status(500).send('error while checking!!!')
     }
 }
+
+/** get user /:username */
+export async function getuser(req, res) {
+    const { username } = req.params;
+    try {
+        if (!username) return res.status(501).send({ error: "Invalid Username" });
+        const user = await userModel.findOne({ username });
+
+        if (!user) return res.status(501).send({ error: "Couldn't Find the User" });
+        /** don't send password */
+        const { password, ...rest } = Object.assign({}, user.toJSON());
+        return res.status(201).send(rest);
+    } catch (error) {
+        return res.status(404).send({ error: "Cannot Find User Data" });
+
+    }
+}
+
+/** update user */
+export async function updateuser(req, res) {
+    try {
+
+        const id = req.query.id;
+        const { userId } = req.user;
+
+        if (id) {
+            const body = req.body;
+
+            // update the data
+            userModel.updateOne({ _id: userId }, body, function (err, data) {
+                if (err) throw err;
+
+                return res.status(201).send({ msg: "Record Updated...!" });
+            })
+
+        } else {
+            return res.status(401).send({ error: "User Not Found...!" });
+        }
+
+    } catch (error) {
+        return res.status(401).send({ error: `did not run` });
+    }
+}
+
+/** more logic to write here will do it later!!!*/
